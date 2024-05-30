@@ -52,7 +52,8 @@ const myPostsQuery = userId => {
 	return `SELECT 
       posts.*, 
       users.nickname, 
-      users.profileImage 
+      users.profileImage ,
+      (SELECT COUNT(*) FROM comments WHERE comments.postId = posts.postId) AS comment_count
     FROM 
       posts 
     INNER JOIN 
@@ -71,7 +72,8 @@ const otherPostsQuery = () => {
 	return `SELECT 
       posts.*, 
       users.nickname, 
-      users.profileImage 
+      users.profileImage,
+      (SELECT COUNT(*) FROM comments WHERE comments.postId = posts.postId) AS comment_count
     FROM 
       posts 
     INNER JOIN 
@@ -90,7 +92,8 @@ const codingPostsQuery = () => {
 	return `SELECT 
       posts.*, 
       users.nickname, 
-      users.profileImage 
+      users.profileImage,
+      (SELECT COUNT(*) FROM comments WHERE comments.postId = posts.postId) AS comment_count 
     FROM 
       posts 
     INNER JOIN 
