@@ -5,8 +5,7 @@ const postsQuery = () => {
 	return `SELECT 
       posts.*, 
       users.nickname, 
-      users.profileImage,
-      (SELECT COUNT(*) FROM comments WHERE comments.postId = posts.postId) AS comment_count
+      users.profileImage
     FROM 
       posts 
     INNER JOIN 
@@ -23,8 +22,7 @@ const postQuery = id => {
 	return `SELECT 
       posts.*, 
       users.nickname, 
-      users.profileImage,
-      (SELECT COUNT(*) FROM comments WHERE comments.postId = posts.postId) AS comment_count
+      users.profileImage
     FROM 
       posts 
     INNER JOIN 
@@ -52,8 +50,7 @@ const myPostsQuery = userId => {
 	return `SELECT 
       posts.*, 
       users.nickname, 
-      users.profileImage ,
-      (SELECT COUNT(*) FROM comments WHERE comments.postId = posts.postId) AS comment_count
+      users.profileImage
     FROM 
       posts 
     INNER JOIN 
@@ -72,8 +69,7 @@ const otherPostsQuery = () => {
 	return `SELECT 
       posts.*, 
       users.nickname, 
-      users.profileImage,
-      (SELECT COUNT(*) FROM comments WHERE comments.postId = posts.postId) AS comment_count
+      users.profileImage
     FROM 
       posts 
     INNER JOIN 
@@ -92,8 +88,7 @@ const codingPostsQuery = () => {
 	return `SELECT 
       posts.*, 
       users.nickname, 
-      users.profileImage,
-      (SELECT COUNT(*) FROM comments WHERE comments.postId = posts.postId) AS comment_count 
+      users.profileImage
     FROM 
       posts 
     INNER JOIN 
@@ -151,6 +146,14 @@ const deletePostQuery = id => {
   `
 }
 
+const getTopPostQuery = () => {
+	return `SELECT postId, title
+    FROM posts
+    ORDER BY view DESC
+    LIMIT 10;
+  `
+}
+
 module.exports = {
 	postsQuery,
 	postQuery,
@@ -160,5 +163,6 @@ module.exports = {
 	addPostQuery,
 	updatePostQuery,
 	updatePostViewQuery,
-	deletePostQuery
+	deletePostQuery,
+	getTopPostQuery
 }

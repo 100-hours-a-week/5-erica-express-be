@@ -3,9 +3,9 @@ const { db_info } = require('../config/mysql.cjs')
 
 const conn = mysql.createConnection(db_info)
 
-const queryPromise = query => {
+const queryPromise = (query, connection = conn) => {
 	return new Promise((resolve, reject) => {
-		conn.query(query, (err, result) => {
+		connection.query(query, (err, result) => {
 			if (err) {
 				console.error(err)
 				reject(err)

@@ -9,7 +9,8 @@ const {
 	addPostQuery,
 	updatePostQuery,
 	updatePostViewQuery,
-	deletePostQuery
+	deletePostQuery,
+	getTopPostQuery
 } = require('../queries/posts.cjs')
 
 const { queryPromise } = require('../tools/queryUtils.cjs')
@@ -61,6 +62,10 @@ const deletePostModel = async id => {
 	return true
 }
 
+const getTopPostsModel = async () => {
+	return await queryPromise(getTopPostQuery())
+}
+
 const addPostImageModel = image => {
 	const matches = image.match(/^data:([A-Za-z-+\/]+);base64,(.+)$/)
 
@@ -103,5 +108,6 @@ module.exports = {
 	addPostModel,
 	updatePostViewModel,
 	updatePostModel,
-	deletePostModel
+	deletePostModel,
+	getTopPostsModel
 }

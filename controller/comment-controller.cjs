@@ -31,20 +31,30 @@ const addComment = async (req, res) => {
 	const comment = req.body.comment
 	const userId = Number(req.session.user.userId)
 
-	if (!userId) return res.status(401).json({ status: 401, message: 'unauthenticated', data: null })
+	if (!userId) {
+		return res.status(401).json({ status: 401, message: 'unauthenticated', data: null })
+	}
 
-	if (!postId) return res.status(400).json({ status: 400, message: 'invalid_post_id', data: null })
+	if (!postId) {
+		return res.status(400).json({ status: 400, message: 'invalid_post_id', data: null })
+	}
 
 	const post = await getPostModel(postId)
-	if (!post) return res.status(404).json({ status: 404, message: 'not_a_single_post', data: null })
+	if (!post || post.length === 0) {
+		return res.status(404).json({ status: 404, message: 'not_a_single_post', data: null })
+	}
 
-	if (!comment) return res.status(400).json({ status: 400, message: 'invalid_comment', data: null })
+	if (!comment) {
+		return res.status(400).json({ status: 400, message: 'invalid_comment', data: null })
+	}
 
-	const isSuccess = await addCommentModel({ postId, userId, comment })
-
-	if (!isSuccess) return res.status(500).json({ status: 500, message: 'internal_sever_error', data: null })
-
-	return res.status(201).json({ status: 201, message: 'write_comment_success', data: null })
+	try {
+		await addCommentModel({ postId, userId, comment })
+		return res.status(201).json({ status: 201, message: 'write_comment_success', data: null })
+	} catch (error) {
+		console.error('Error adding comment:', error)
+		return res.status(500).json({ status: 500, message: 'internal_server_error', data: null })
+	}
 }
 
 const updateComment = async (req, res) => {
@@ -61,8 +71,7 @@ const updateComment = async (req, res) => {
 const deleteComment = async (req, res) => {
 	const commentId = Number(req.params.commentId)
 	const postId = Number(req.params.postId)
-	const isSuccess = await deleteCommentModel(commentId)
-
+	const isSuccess = await deleteCommentModel(postId, commentId)
 	if (!isSuccess) return res.status(500).json({ status: 500, message: 'internal_server_error', data: null })
 
 	return res.status(200).json({ status: 200, message: 'delete_comment_success', data: null })

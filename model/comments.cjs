@@ -3,9 +3,13 @@ const {
 	getCommentsQuery,
 	addCommentQuery,
 	updateCommentQuery,
-	deleteCommentQuery
+	deleteCommentQuery,
+	upCommentCountQuery,
+	downCommentCountQuery
 } = require('../queries/comments.cjs')
 
+const mysql = require('mysql2')
+const { db_info } = require('../config/mysql.cjs')
 const { queryPromise } = require('../tools/queryUtils.cjs')
 
 const getCommentModel = async commentId => {
@@ -22,8 +26,29 @@ const checkCommentOwnerModel = async data => {
 }
 
 const addCommentModel = async data => {
-	await queryPromise(addCommentQuery(data))
-	return true
+	const connection = mysql.createConnection(db_info)
+
+	try {
+		await new Promise((resolve, reject) => {
+			connection.beginTransaction(async () => {
+				try {
+					// 댓글 추가
+					await queryPromise(addCommentQuery(data), connection)
+					// 게시물의 댓글 수 업데이트
+					await queryPromise(upCommentCountQuery(data.postId), connection)
+
+					// 트랜잭션 커밋
+					connection.commit()
+					resolve(true)
+				} catch (error) {
+					connection.rollback()
+					reject(error)
+				}
+			})
+		})
+	} finally {
+		connection.end()
+	}
 }
 
 const updateCommentModel = async data => {
@@ -31,9 +56,31 @@ const updateCommentModel = async data => {
 	return true
 }
 
-const deleteCommentModel = async commentId => {
-	await queryPromise(deleteCommentQuery(commentId))
-	return true
+const deleteCommentModel = async (postId, commentId) => {
+	const connection = mysql.createConnection(db_info)
+
+	try {
+		await new Promise((resolve, reject) => {
+			connection.beginTransaction(async () => {
+				try {
+					// 댓글 삭제
+					await queryPromise(deleteCommentQuery(commentId), connection)
+					// 게시물의 댓글 수 업데이트
+					await queryPromise(downCommentCountQuery(postId), connection)
+
+					// 트랜잭션 커밋
+					connection.commit()
+					resolve(true)
+				} catch (error) {
+					connection.rollback()
+					reject(error)
+				}
+			})
+		})
+		return true
+	} finally {
+		connection.end()
+	}
 }
 
 module.exports = {

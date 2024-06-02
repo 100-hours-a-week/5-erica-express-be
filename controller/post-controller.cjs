@@ -9,7 +9,8 @@ const {
 	getMyPostsModel,
 	getOtherPostsModel,
 	updatePostViewModel,
-	getCodingPostsModel
+	getCodingPostsModel,
+	getTopPostsModel
 } = require('../model/posts.cjs')
 
 //--------------------------------------------------------
@@ -185,6 +186,11 @@ const getCodingPosts = async (req, res) => {
 	return res.status(200).json({ status: 200, message: '', data: codingPosts })
 }
 
+const getTopPosts = async (req, res) => {
+	const topPosts = await getTopPostsModel()
+	return res.status(200).json({ status: 200, message: '', data: topPosts })
+}
+
 module.exports = {
 	getPosts,
 	getPost,
@@ -196,5 +202,6 @@ module.exports = {
 	checkPostOwner,
 	getMyPosts,
 	getOtherPosts,
-	getCodingPosts
+	getCodingPosts,
+	getTopPosts
 }

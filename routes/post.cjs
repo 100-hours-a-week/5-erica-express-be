@@ -10,7 +10,8 @@ const {
 	checkPostOwner,
 	getMyPosts,
 	getOtherPosts,
-	getCodingPosts
+	getCodingPosts,
+	getTopPosts
 } = require('../controller/post-controller.cjs')
 const { getAuthUser, getPostUser } = require('../middleware/authUser.cjs')
 
@@ -27,6 +28,8 @@ router.get('/other', getAuthUser, getOtherPosts)
 
 //개발 게시물
 router.get('/coding', getAuthUser, getCodingPosts)
+
+router.get('/top10', getAuthUser, getTopPosts)
 
 //게시물 상세 불러오기 --OK
 router.get('/:id', getAuthUser, getPost)
