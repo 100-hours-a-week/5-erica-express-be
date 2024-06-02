@@ -154,6 +154,18 @@ const getTopPostQuery = () => {
   `
 }
 
+const upCommentCountQuery = postId => {
+	return `UPDATE posts
+	SET comment_count = comment_count + 1
+	WHERE postId = ${postId};`
+}
+
+const downCommentCountQuery = postId => {
+	return `UPDATE posts
+	SET comment_count = comment_count - 1
+	WHERE postId = ${postId};`
+}
+
 module.exports = {
 	postsQuery,
 	postQuery,
@@ -164,5 +176,7 @@ module.exports = {
 	updatePostQuery,
 	updatePostViewQuery,
 	deletePostQuery,
-	getTopPostQuery
+	getTopPostQuery,
+	upCommentCountQuery,
+	downCommentCountQuery
 }

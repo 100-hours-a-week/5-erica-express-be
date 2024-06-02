@@ -3,14 +3,14 @@ const {
 	getCommentsQuery,
 	addCommentQuery,
 	updateCommentQuery,
-	deleteCommentQuery,
-	upCommentCountQuery,
-	downCommentCountQuery
+	deleteCommentQuery
 } = require('../queries/comments.cjs')
 
 const mysql = require('mysql2')
 const { db_info } = require('../config/mysql.cjs')
 const { queryPromise } = require('../tools/queryUtils.cjs')
+
+const { upCommentCountQuery, downCommentCountQuery } = require('../queries/posts.cjs')
 
 const getCommentModel = async commentId => {
 	return await queryPromise(getCommentQuery(commentId))
