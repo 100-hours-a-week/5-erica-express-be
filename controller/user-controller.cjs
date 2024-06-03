@@ -24,7 +24,7 @@ const {
 // }
 
 const getUser = async (req, res) => {
-	const userId = req.session.user.userId
+	const userId = req.session.user.user_id
 
 	if (!userId) return res.status(400).json({ status: 404, message: 'invalid_user_id', data: null })
 
@@ -84,7 +84,7 @@ const logInUser = async (req, res) => {
 
 //유저 프로필 변경
 const updateUserProfile = async (req, res) => {
-	const userId = Number(req.userId)
+	const userId = Number(req.user_id)
 	const { nickname, profile_image } = req.body
 
 	let user_server_url = ''
@@ -121,7 +121,7 @@ const updateUserProfile = async (req, res) => {
 
 //비밀번호 변경
 const updateUserpassword = async (req, res) => {
-	const userId = Number(req.userId)
+	const userId = Number(req.user_id)
 	const password = req.body.password
 
 	if (!userId) return res.status(400).json({ status: 400, message: 'invalid_user_id', data: null })
@@ -146,7 +146,7 @@ const updateUserpassword = async (req, res) => {
 
 //회원탈퇴
 const deleteUser = async (req, res) => {
-	const userId = Number(req.session.user.userId)
+	const userId = Number(req.session.user.user_id)
 
 	if (!userId) return res.status(400).json({ status: 400, message: 'invalid_user_id', data: null })
 
@@ -171,7 +171,7 @@ const duplicateEmail = async (req, res) => {
 
 const duplicateNickname = async (req, res) => {
 	const nickname = req.params.nickname
-	const userId = Number(req.session.user.userId) ?? null
+	const userId = Number(req.session.user.user_id) ?? null
 
 	if (!userId) return res.status(404).json({ status: 404, message: 'invalid_user', data: null })
 
@@ -205,7 +205,7 @@ const checkLogIn = (req, res) => {
 }
 
 const getMyCount = async (req, res) => {
-	const data = await getUserWriteCount(req.session.user.userId)
+	const data = await getUserWriteCount(req.session.user.user_id)
 	return res.status(200).json({ status: 200, message: '', data })
 }
 

@@ -7,7 +7,6 @@ import porfileImageRouter from './routes/profileImage.js'
 import postImageRouter from './routes/postImage.js'
 
 import cors from 'cors'
-import bodyParser from 'body-parser'
 
 const app = express()
 const server = http.createServer(app)

@@ -44,7 +44,7 @@ const getCodingPostsModel = async () => {
 
 const checkPostOwnerModel = async data => {
 	const post = await getPostModel(data.postId)
-	return post[0].userId === data.userId
+	return post[0].user_id === data.userId
 }
 
 const addPostModel = async data => {

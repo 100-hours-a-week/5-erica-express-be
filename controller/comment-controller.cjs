@@ -29,7 +29,7 @@ const getComments = async (req, res) => {
 const addComment = async (req, res) => {
 	const postId = Number(req.params.postId)
 	const comment = req.body.comment
-	const userId = Number(req.session.user.userId)
+	const userId = Number(req.session.user.user_id)
 
 	if (!userId) {
 		return res.status(401).json({ status: 401, message: 'unauthenticated', data: null })
@@ -79,7 +79,7 @@ const deleteComment = async (req, res) => {
 
 const checkCommentOwner = async (req, res) => {
 	const id = Number(req.body.commentId)
-	const userId = Number(req.session.user.userId)
+	const userId = Number(req.session.user.user_id)
 	const check = await checkCommentOwnerModel({ userId, commentId: id })
 	if (!check) return res.status(403).json({ status: 403, message: 'not_allowed', data: null })
 

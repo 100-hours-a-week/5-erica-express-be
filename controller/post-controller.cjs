@@ -82,7 +82,7 @@ const getPostImage = (req, res) => {
 }
 
 const addPost = async (req, res) => {
-	const userId = Number(req.session.user.userId)
+	const userId = Number(req.session.user.user_id)
 	const { title, content, postImageSrc, type } = req.body
 	let post_server_url = ''
 
@@ -156,14 +156,13 @@ const deletePost = async (req, res) => {
 const checkPostOwner = async (req, res) => {
 	if (!req.session) return res.status(403).json({ status: 403, message: 'unauthorized', data: null })
 
-	const userId = Number(req.session?.user.userId)
+	const userId = Number(req.session?.user.user_id)
 
 	if (!userId) {
 		return res.status(401).json({ status: 401, message: 'unauthenticated', data: null })
 	}
 
 	const id = Number(req.body.postId)
-
 	const check = await checkPostOwnerModel({ userId, postId: id })
 
 	if (!check) return res.status(403).json({ status: 403, message: 'not_allowed', data: null })
@@ -172,7 +171,7 @@ const checkPostOwner = async (req, res) => {
 }
 
 const getMyPosts = async (req, res) => {
-	const myPosts = await getMyPostsModel(Number(req.session.user.userId))
+	const myPosts = await getMyPostsModel(Number(req.session.user.user_id))
 	return res.status(200).json({ status: 200, message: '', data: myPosts })
 }
 

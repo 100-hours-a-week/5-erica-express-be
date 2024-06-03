@@ -5,13 +5,13 @@ const postsQuery = () => {
 	return `SELECT 
       posts.*, 
       users.nickname, 
-      users.profileImage
+      users.profile_image
     FROM 
       posts 
     INNER JOIN 
       users 
     ON 
-      posts.userId = users.userId 
+      posts.user_id = users.user_id 
     ORDER BY
       posts.created_at DESC;
   `
@@ -22,15 +22,15 @@ const postQuery = id => {
 	return `SELECT 
       posts.*, 
       users.nickname, 
-      users.profileImage
+      users.profile_image
     FROM 
       posts 
     INNER JOIN 
       users 
     ON 
-      posts.userId = users.userId 
+      posts.user_id = users.user_id 
     WHERE 
-      posts.postId = ${id}
+      posts.post_id = ${id}
   `
 }
 
@@ -41,7 +41,7 @@ const updatePostViewQuery = id => {
     SET 
       view = view + 1 
     WHERE 
-      posts.postId = ${id} 
+      posts.post_id = ${id} 
     `
 }
 
@@ -50,15 +50,15 @@ const myPostsQuery = userId => {
 	return `SELECT 
       posts.*, 
       users.nickname, 
-      users.profileImage
+      users.profile_image
     FROM 
       posts 
     INNER JOIN 
       users 
     ON 
-      posts.userId = users.userId 
+      posts.user_id = users.user_id 
     WHERE 
-      users.userId = ${userId} 
+      users.user_id = ${userId} 
     ORDER BY 
       posts.created_at DESC;
     `
@@ -69,13 +69,13 @@ const otherPostsQuery = () => {
 	return `SELECT 
       posts.*, 
       users.nickname, 
-      users.profileImage
+      users.profile_image
     FROM 
       posts 
     INNER JOIN 
       users 
     ON 
-      posts.userId = users.userId 
+      posts.user_id = users.user_id 
     WHERE 
       posts.type = 'other' 
     ORDER BY 
@@ -88,13 +88,13 @@ const codingPostsQuery = () => {
 	return `SELECT 
       posts.*, 
       users.nickname, 
-      users.profileImage
+      users.profile_image
     FROM 
       posts 
     INNER JOIN 
       users 
     ON 
-      posts.userId = users.userId 
+      posts.user_id = users.user_id 
     WHERE 
       posts.type = 'coding' 
     ORDER BY 
@@ -106,8 +106,8 @@ const codingPostsQuery = () => {
 const addPostQuery = data => {
 	const date = getLocalDateTime()
 	return `INSERT INTO posts (
-      userId, 
-      postImage, 
+    user_id, 
+      post_image, 
       title, 
       content, 
       created_at, 
@@ -131,23 +131,23 @@ const updatePostQuery = data => {
     SET 
       title = "${data.title}", 
       content = "${data.content}", 
-      postImage = "${data.postImage}", 
+      post_image = "${data.postImage}", 
       type = "${data.type}",
       updated_at = "${date}"
     WHERE 
-      posts.postId = ${data.id} 
+      posts.post_id = ${data.id} 
   `
 }
 
 // 게시물 삭제 쿼리
 const deletePostQuery = id => {
 	return `DELETE FROM posts 
-    WHERE postId = ${id}; 
+    WHERE post_id = ${id}; 
   `
 }
 
 const getTopPostQuery = () => {
-	return `SELECT postId, title
+	return `SELECT post_id, title
     FROM posts
     ORDER BY view DESC
     LIMIT 10;
@@ -157,13 +157,13 @@ const getTopPostQuery = () => {
 const upCommentCountQuery = postId => {
 	return `UPDATE posts
 	SET comment_count = comment_count + 1
-	WHERE postId = ${postId};`
+	WHERE post_id = ${postId};`
 }
 
 const downCommentCountQuery = postId => {
 	return `UPDATE posts
 	SET comment_count = comment_count - 1
-	WHERE postId = ${postId};`
+	WHERE post_id = ${postId};`
 }
 
 module.exports = {

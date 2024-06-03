@@ -22,7 +22,7 @@ const getCommentsModel = async postId => {
 
 const checkCommentOwnerModel = async data => {
 	const comment = await getCommentModel(data.commentId)
-	return comment[0].userId === data.userId
+	return comment[0].user_id === data.userId
 }
 
 const addCommentModel = async data => {

@@ -4,7 +4,7 @@ const getUserQuery = id => {
 	return `SELECT * 
     FROM users 
     WHERE 
-      userId = ${id};
+      user_id = ${id};
   `
 }
 
@@ -31,13 +31,13 @@ const addUserQuery = data => {
       email,
       nickname,
       password,
-      profileImage,
+      profile_image,
       created_at
     ) VALUES (
       '${data.email}',
       '${data.nickname}',
       '${data.password}',
-      '${data.profileImage}',
+      '${data.profile_image}',
       '${date}'
     );
   `
@@ -47,9 +47,9 @@ const updateUserProfileQuery = data => {
 	return `UPDATE users
     SET 
       nickname = '${data.nickname}',
-      profileImage = '${data.profile_image}'
+      profile_image = '${data.profile_image}'
     WHERE 
-      userId = ${data.userId};
+      user_id = ${data.userId};
   `
 }
 
@@ -58,14 +58,14 @@ const updateUserPasswordQuery = data => {
     SET 
       password = '${data.password}'
     WHERE 
-      userId = ${data.userId};
+      user_id = ${data.userId};
   `
 }
 
 const deleteUserQuery = id => {
 	return `DELETE FROM users 
     WHERE 
-      userId = ${id};
+      user_id = ${id};
   `
 }
 
@@ -73,7 +73,7 @@ const getPostCountQuery = id => {
 	return `SELECT COUNT(*) AS count 
     FROM posts 
     WHERE 
-      userId = ${id};
+      user_id = ${id};
   `
 }
 
@@ -81,7 +81,7 @@ const getCommentCountQuery = id => {
 	return `SELECT COUNT(*) AS count 
     FROM comments 
     WHERE 
-      userId = ${id};
+      user_id = ${id};
   `
 }
 

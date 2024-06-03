@@ -4,19 +4,19 @@ const getCommentsQuery = id => {
 	return `SELECT 
       comments.*, 
       users.nickname, 
-      users.profileImage 
+      users.profile_image 
     FROM 
       comments 
     INNER JOIN 
       users 
     ON 
-      comments.userId = users.userId 
+      comments.user_id = users.user_id 
     INNER JOIN 
       posts 
     ON 
-      comments.postId = posts.postId 
+      comments.post_id = posts.post_id 
     WHERE 
-      posts.postId = ${id}
+      posts.post_id = ${id}
     ORDER BY 
       comments.created_at DESC;
   `
@@ -26,7 +26,7 @@ const getCommentQuery = id => {
 	return `SELECT * 
     FROM comments 
     WHERE 
-      commentId = ${id};  
+      comment_id = ${id};  
   `
 }
 
@@ -35,14 +35,14 @@ const addCommentQuery = data => {
 
 	return `INSERT INTO comments (
       comment,
-      postId,
-      userId,
+      post_id,
+      user_id,
       created_at
     ) VALUES (
       '${data.comment}',
       ${data.postId},
       ${data.userId},
-      '${date}'
+      NOW()
     );
   `
 }
@@ -52,14 +52,14 @@ const updateCommentQuery = data => {
     SET 
       comment = '${data.commentContent}' 
     WHERE 
-      commentId = ${data.commentId};   
+      comment_id = ${data.commentId};   
   `
 }
 
 const deleteCommentQuery = id => {
 	return `DELETE FROM comments 
     WHERE 
-      commentId = ${id};  
+      comment_id = ${id};  
   `
 }
 

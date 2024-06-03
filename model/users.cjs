@@ -41,7 +41,7 @@ const checkUserEmailModel = async email => {
 const addUserModel = async data => {
 	const salt = bcrypt.genSaltSync(10)
 	const hash = bcrypt.hashSync(data.password, salt)
-	const addData = { email: data.email, nickname: data.nickname, password: hash, profileImage: data.profile_image }
+	const addData = { email: data.email, nickname: data.nickname, password: hash, profile_image: data.profile_image }
 	const result = await queryPromise(addUserQuery(addData))
 	return result.insertId
 }

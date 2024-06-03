@@ -11,10 +11,10 @@ const getAuthUser = (req, res, next) => {
 }
 
 const modifyAuthUser = (req, res, next) => {
-	if (!req.session.user.userId || !req.session.user) {
+	if (!req.session.user.user_id || !req.session.user) {
 		return res.status(403).json({ status: 403, message: 'unauthorized', data: null })
 	}
-	req.userId = req.session.user.userId
+	req.user_id = req.session.user.user_id
 	next()
 }
 
@@ -26,7 +26,7 @@ const getPostUser = async (req, res, next) => {
 		return res.status(403).json({ status: 401, message: 'unauthenticated', data: null })
 	}
 
-	const check = await checkPostOwnerModel({ userId: req.session.user.userId, postId: req.params.id })
+	const check = await checkPostOwnerModel({ userId: req.session.user.user_id, postId: req.params.id })
 
 	if (!check) {
 		return res.status(403).json({ status: 403, message: 'unauthorized', data: null })
@@ -38,11 +38,11 @@ const getPostUser = async (req, res, next) => {
 const getCommentUser = async (req, res, next) => {
 	const postId = Number(req.params.postId)
 	const commentId = Number(req.params.commentId)
-
+	console.log(commentId)
 	if (!req.session || !req.session.user) {
 		return res.status(401).json({ status: 401, message: 'unauthenticated', data: null })
 	}
-	const userId = req.session.user.userId
+	const userId = req.session.user.user_id
 
 	if (!postId) return res.status(400).json({ status: 400, message: 'invalid_post_id', data: null })
 
