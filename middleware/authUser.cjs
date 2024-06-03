@@ -49,7 +49,7 @@ const getCommentUser = async (req, res, next) => {
 	if (!commentId) return res.status(400).json({ status: 400, message: 'invalid_comment_id', data: null })
 
 	const comment = await checkCommentOwnerModel({ commentId, userId })
-
+	if (comment === -1) return res.status(500).json({ status: 500, message: 'internal_sever_error', data: null })
 	if (!comment) {
 		return res.status(403).json({ status: 403, message: 'unauthorized', data: null })
 	}

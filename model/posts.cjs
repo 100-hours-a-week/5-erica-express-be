@@ -15,55 +15,120 @@ const {
 
 const { queryPromise } = require('../tools/queryUtils.cjs')
 
-//post관련 서비스
-//게시물 상세 조회 로직
+// 게시물 상세 조회 로직
 const getPostsModel = async () => {
-	return await queryPromise(postsQuery())
+	try {
+		const query = postsQuery()
+		return await queryPromise(query.sql, query.values)
+	} catch (error) {
+		console.log(error)
+		return -1
+	}
 }
 
 const getPostModel = async id => {
-	return await queryPromise(postQuery(id))
+	try {
+		const query = postQuery(id)
+		return await queryPromise(query.sql, query.values)
+	} catch (error) {
+		console.log(error)
+		return -1
+	}
 }
 
 const updatePostViewModel = async id => {
-	await queryPromise(updatePostViewQuery(id))
-	return true
+	try {
+		const query = updatePostViewQuery(id)
+		await queryPromise(query.sql, query.values)
+		return true
+	} catch (error) {
+		console.log(error)
+		return -1
+	}
 }
 
 const getMyPostsModel = async userId => {
-	return await queryPromise(myPostsQuery(userId))
+	try {
+		const query = myPostsQuery(userId)
+		return await queryPromise(query.sql, query.values)
+	} catch (error) {
+		console.log(error)
+		return -1
+	}
 }
 
 const getOtherPostsModel = async () => {
-	return await queryPromise(otherPostsQuery())
+	try {
+		const query = otherPostsQuery()
+		return await queryPromise(query.sql, query.values)
+	} catch (error) {
+		console.log(error)
+		return -1
+	}
 }
 
 const getCodingPostsModel = async () => {
-	return await queryPromise(codingPostsQuery())
+	try {
+		const query = codingPostsQuery()
+		return await queryPromise(query.sql, query.values)
+	} catch (error) {
+		console.log(error)
+		return -1
+	}
 }
 
 const checkPostOwnerModel = async data => {
-	const post = await getPostModel(data.postId)
-	return post[0].user_id === data.userId
+	try {
+		const query = postQuery(data.postId)
+		const post = await queryPromise(query.sql, query.values)
+		return post[0].user_id === data.userId
+	} catch (error) {
+		console.log(error)
+		return -1
+	}
 }
 
 const addPostModel = async data => {
-	const result = await queryPromise(addPostQuery(data))
-	return result.insertId
+	try {
+		const query = addPostQuery(data)
+		const result = await queryPromise(query.sql, query.values)
+		return result.insertId
+	} catch (error) {
+		console.log(error)
+		return -1
+	}
 }
 
 const updatePostModel = async data => {
-	await queryPromise(updatePostQuery(data))
-	return data.id
+	try {
+		const query = updatePostQuery(data)
+		await queryPromise(query.sql, query.values)
+		return data.id
+	} catch (error) {
+		console.log(error)
+		return -1
+	}
 }
 
 const deletePostModel = async id => {
-	await queryPromise(deletePostQuery(id))
-	return true
+	try {
+		const query = deletePostQuery(id)
+		await queryPromise(query.sql, query.values)
+		return true
+	} catch (error) {
+		console.log(error)
+		return -1
+	}
 }
 
 const getTopPostsModel = async () => {
-	return await queryPromise(getTopPostQuery())
+	try {
+		const query = getTopPostQuery()
+		return await queryPromise(query.sql, query.values)
+	} catch (error) {
+		console.log(error)
+		return -1
+	}
 }
 
 const addPostImageModel = image => {

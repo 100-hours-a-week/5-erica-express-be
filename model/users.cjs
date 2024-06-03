@@ -18,23 +18,47 @@ const {
 
 //userId 유효성 조회 로직
 const checkUserIdModel = async userId => {
-	const result = await queryPromise(getUserQuery(userId))
-	return result.length !== 0
+	try {
+		const query = getUserQuery(userId)
+		const result = await queryPromise(query.sql, query.values)
+		return result.length !== 0
+	} catch (error) {
+		console.log(error)
+		return -1
+	}
 }
 
 const checkUserModel = async userId => {
-	const result = await queryPromise(getUserQuery(userId))
-	return result.length !== 0 ? result[0] : null
+	try {
+		const query = getUserQuery(userId)
+		const result = await queryPromise(query.sql, query.values)
+		return result.length !== 0 ? result[0] : null
+	} catch (error) {
+		console.log(error)
+		return -1
+	}
 }
 
 const checkUserNicknameModel = async nickname => {
-	const result = await queryPromise(nicknameQuery(nickname))
-	return result.length !== 0
+	try {
+		const query = nicknameQuery(nickname)
+		const result = await queryPromise(query.sql, query.values)
+		return result.length !== 0
+	} catch (error) {
+		console.log(error)
+		return -1
+	}
 }
 
 const checkUserEmailModel = async email => {
-	const result = await queryPromise(emailQuery(email))
-	return result.length !== 0
+	try {
+		const query = emailQuery(email)
+		const result = await queryPromise(query.sql, query.values)
+		return result.length !== 0
+	} catch (error) {
+		console.log(error)
+		return -1
+	}
 }
 
 //유저 등록 로직
@@ -42,29 +66,51 @@ const addUserModel = async data => {
 	const salt = bcrypt.genSaltSync(10)
 	const hash = bcrypt.hashSync(data.password, salt)
 	const addData = { email: data.email, nickname: data.nickname, password: hash, profile_image: data.profile_image }
-	const result = await queryPromise(addUserQuery(addData))
-	return result.insertId
+	try {
+		const query = addUserQuery(addData)
+		const result = await queryPromise(query.sql, query.values)
+		return result.insertId
+	} catch (error) {
+		return -1
+	}
 }
 
 const checkLogInModel = async email => {
-	const result = await queryPromise(emailQuery(email))
-	return result.length !== 0 ? result[0] : null
+	const query = emailQuery(email)
+	try {
+		const result = await queryPromise(query.sql, query.values)
+		return result.length !== 0 ? result[0] : null
+	} catch (error) {
+		console.log(error)
+		return -1
+	}
 }
 
 //유저 로그인 로직 -> 유저 아이디 반환
 const logInUserModel = async (email, password) => {
-	const user = await checkLogInModel(email)
-	if (!user) return false
-
-	const passwordCorrect = await bcrypt.compare(password, user.password)
-	return passwordCorrect ? user : false
+	try {
+		const user = await checkLogInModel(email)
+		if (!user) return false
+		if (user === -1) return -1
+		const passwordCorrect = await bcrypt.compare(password, user.password)
+		return passwordCorrect ? user : false
+	} catch (error) {
+		console.log(error)
+		return -1
+	}
 }
 
 //유저 정보 수정 로직
 const updateUserProfileModel = async data => {
 	if (!data.nickname && !data.profile_image) return null
-	await queryPromise(updateUserProfileQuery(data))
-	return true
+	try {
+		const query = updateUserProfileQuery(data)
+		await queryPromise(query.sql, query.values)
+		return true
+	} catch (error) {
+		console.log(error)
+		return -1
+	}
 }
 
 //유저 비밀번호 수정 로직
@@ -75,9 +121,15 @@ const updateUserPasswordModel = async data => {
 	const salt = bcrypt.genSaltSync(10)
 	const hash = bcrypt.hashSync(password, salt)
 	const updateData = { password: hash, userId }
+	const query = updateUserPasswordQuery(updateData)
 
-	await queryPromise(updateUserPasswordQuery(updateData))
-	return true
+	try {
+		await queryPromise(query.sql, query.values)
+		return true
+	} catch (error) {
+		console.log(error)
+		return -1
+	}
 }
 
 //유저 회원탈퇴 로직
@@ -86,19 +138,33 @@ const deleteUserModel = async id => {
 
 	const userExists = await checkUserIdModel(id)
 	if (!userExists) return false
+	if (userExists === -1) return -1
 
-	await queryPromise(deleteUserQuery(id))
-	return true
+	const query = deleteUserQuery(id)
+
+	try {
+		await queryPromise(query.sql, query.values)
+		return true
+	} catch (error) {
+		console.log(error)
+		return -1
+	}
 }
 
 //게시글 수, 댓글 수 가져오기
 const getUserWriteCount = async userId => {
-	const postCountResult = await queryPromise(getPostCountQuery(userId))
-	const commentCountResult = await queryPromise(getCommentCountQuery(userId))
-
-	return {
-		postCount: postCountResult[0]?.count || 0,
-		commentCount: commentCountResult[0]?.count || 0
+	try {
+		const postQuery = getPostCountQuery(userId)
+		const commentQuery = getCommentCountQuery(userId)
+		const postCountResult = await queryPromise(postQuery.sql, postQuery.values)
+		const commentCountResult = await queryPromise(commentQuery.sql, commentQuery.values)
+		return {
+			postCount: postCountResult[0]?.count || 0,
+			commentCount: commentCountResult[0]?.count || 0
+		}
+	} catch (error) {
+		console.log(error)
+		return -1
 	}
 }
 

@@ -16,34 +16,30 @@ const {
 //--------------------------------------------------------
 //실제 controller
 const getPosts = async (req, res) => {
-	try {
-		const posts = await getPostsModel()
+	const posts = await getPostsModel()
+	if (posts === -1) return res.status(500).json({ status: 500, message: 'Internal server error', data: null })
+	// TODO: 서버로 띄울 시 활성화 필요
+	// posts.forEach((post) => {
+	//   post.postImage = post.postImage.replace(
+	//     "http://localhost:8000",
+	//     `https://${req.headers.host}`
+	//   );
+	//   post.userImage = post.userImage.replace(
+	//     "http://localhost:8000",
+	//     `https://${req.headers.host}`
+	//   );
+	// });
 
-		// TODO: 서버로 띄울 시 활성화 필요
-		// posts.forEach((post) => {
-		//   post.postImage = post.postImage.replace(
-		//     "http://localhost:8000",
-		//     `https://${req.headers.host}`
-		//   );
-		//   post.userImage = post.userImage.replace(
-		//     "http://localhost:8000",
-		//     `https://${req.headers.host}`
-		//   );
-		// });
-
-		return res.status(200).json({ status: 200, message: null, data: posts })
-	} catch (err) {
-		console.error('Error fetching posts:', err)
-		return res.status(500).json({ status: 500, message: 'Internal server error', data: null })
-	}
+	return res.status(200).json({ status: 200, message: null, data: posts })
 }
 
 const getPost = async (req, res) => {
 	const id = Number(req.params.id)
 	if (!id) return res.status(400).json({ status: 400, message: 'invalid_post_id', data: null })
-	await updatePostViewModel(id)
+	const check = await updatePostViewModel(id)
+	if (check === -1) return res.status(500).json({ status: 500, message: 'internal_server_error', data: null })
 	const post = await getPostModel(id)
-
+	if (post === -1) return res.status(500).json({ status: 500, message: 'internal_server_error', data: null })
 	if (post.length === 0) return res.status(404).json({ status: 404, message: 'cannot_found_post', data: null })
 
 	//TODO: 서버로 띄울 시 활셩화 필요
@@ -59,7 +55,7 @@ const getUpdatePost = async (req, res) => {
 	if (!id) return res.status(400).json({ status: 400, message: 'invalid_post_id', data: null })
 
 	const post = await getPostModel(id)
-
+	if (post === -1) return res.status(500).json({ status: 500, message: 'internal_server_error', data: null })
 	if (!post) return res.status(404).json({ status: 404, message: 'cannot_found_post', data: null })
 
 	//TODO: 서버로 띄울 시 활셩화 필요
@@ -102,7 +98,8 @@ const addPost = async (req, res) => {
 		postImage: post_server_url
 	})
 
-	if (!postId) res.status(500).json({ status: 500, message: 'internal_server_error', data: null })
+	if (!postId || postId === -1)
+		return res.status(500).json({ status: 500, message: 'internal_server_error', data: null })
 
 	return res.status(201).json({
 		status: 201,
@@ -140,7 +137,8 @@ const updatePost = async (req, res) => {
 		postImage: post_server_url
 	})
 
-	if (!postId) return res.status(500).json({ status: 500, message: 'internal_sever_error', data: null })
+	if (!postId || postId === -1)
+		return res.status(500).json({ status: 500, message: 'internal_sever_error', data: null })
 
 	return res.status(200).json({ status: 200, message: 'update_post_success', data: { postId } })
 }
@@ -148,7 +146,8 @@ const updatePost = async (req, res) => {
 const deletePost = async (req, res) => {
 	const id = Number(req.params.id)
 	const isSuccess = await deletePostModel(id)
-	if (!isSuccess) return res.status(500).json({ status: 500, message: 'internal_sever_error', data: null })
+	if (!isSuccess || isSuccess === -1)
+		return res.status(500).json({ status: 500, message: 'internal_sever_error', data: null })
 
 	return res.status(200).json({ status: 200, message: 'delete_post_success', data: null })
 }
@@ -172,21 +171,25 @@ const checkPostOwner = async (req, res) => {
 
 const getMyPosts = async (req, res) => {
 	const myPosts = await getMyPostsModel(Number(req.session.user.user_id))
+	if (myPosts === -1) return res.status(500).json({ status: 500, message: 'internal_sever_error', data: null })
 	return res.status(200).json({ status: 200, message: '', data: myPosts })
 }
 
 const getOtherPosts = async (req, res) => {
 	const otherPosts = await getOtherPostsModel()
+	if (otherPosts === -1) return res.status(500).json({ status: 500, message: 'internal_sever_error', data: null })
 	return res.status(200).json({ status: 200, message: '', data: otherPosts })
 }
 
 const getCodingPosts = async (req, res) => {
 	const codingPosts = await getCodingPostsModel()
+	if (codingPosts === -1) return res.status(500).json({ status: 500, message: 'internal_sever_error', data: null })
 	return res.status(200).json({ status: 200, message: '', data: codingPosts })
 }
 
 const getTopPosts = async (req, res) => {
 	const topPosts = await getTopPostsModel()
+	if (topPosts === -1) return res.status(500).json({ status: 500, message: 'internal_sever_error', data: null })
 	return res.status(200).json({ status: 200, message: '', data: topPosts })
 }
 

@@ -1,85 +1,99 @@
 const getUserQuery = id => {
-	return `SELECT * 
-    FROM users 
-    WHERE 
-      user_id = ${id};
-  `
+	return {
+		sql: `SELECT * 
+      FROM users 
+      WHERE 
+        user_id = ?;`,
+		values: [id]
+	}
 }
 
 const nicknameQuery = nickname => {
-	return `SELECT * 
-    FROM users 
-    WHERE 
-      nickname = '${nickname}';  
-  `
+	return {
+		sql: `SELECT * 
+      FROM users 
+      WHERE 
+        nickname = ?;`,
+		values: [nickname]
+	}
 }
 
 const emailQuery = email => {
-	return `SELECT * 
-    FROM users 
-    WHERE 
-      email = '${email}';
-  `
+	return {
+		sql: `SELECT * 
+      FROM users 
+      WHERE 
+        email = ?;`,
+		values: [email]
+	}
 }
 
 const addUserQuery = data => {
-	return `INSERT INTO users (
-      email,
-      nickname,
-      password,
-      profile_image,
-      created_at
-    ) VALUES (
-      '${data.email}',
-      '${data.nickname}',
-      '${data.password}',
-      '${data.profile_image}',
-      NOW()
-    );
-  `
+	return {
+		sql: `INSERT INTO users (
+        email,
+        nickname,
+        password,
+        profile_image,
+        created_at
+      ) VALUES (
+        ?, ?, ?, ?, NOW()
+      );`,
+		values: [data.email, data.nickname, data.password, data.profile_image]
+	}
 }
 
 const updateUserProfileQuery = data => {
-	return `UPDATE users
-    SET 
-      nickname = '${data.nickname}',
-      profile_image = '${data.profile_image}'
-    WHERE 
-      user_id = ${data.userId};
-  `
+	return {
+		sql: `UPDATE users
+      SET 
+        nickname = ?,
+        profile_image = ?
+      WHERE 
+        user_id = ?;`,
+		values: [data.nickname, data.profile_image, data.userId]
+	}
 }
 
 const updateUserPasswordQuery = data => {
-	return `UPDATE users
-    SET 
-      password = '${data.password}',
-      updated_at = NOW()
-    WHERE 
-      user_id = ${data.userId};
-  `
+	return {
+		sql: `UPDATE users
+      SET 
+        password = ?,
+        updated_at = NOW()
+      WHERE 
+        user_id = ?;`,
+		values: [data.password, data.userId]
+	}
 }
 
 const deleteUserQuery = id => {
-	return `DELETE FROM users 
-    WHERE 
-      user_id = ${id};
-  `
+	return {
+		sql: `DELETE FROM users 
+      WHERE 
+        user_id = ?;`,
+		values: [id]
+	}
 }
 
 const getPostCountQuery = id => {
-	return `SELECT COUNT(*) AS count 
-    FROM posts 
-    WHERE 
-      user_id = ${id};
-  `
+	return {
+		sql: `SELECT COUNT(*) AS count 
+      FROM posts 
+      WHERE 
+        user_id = ?;`,
+		values: [id]
+	}
 }
 
 const getCommentCountQuery = id => {
-	return `SELECT COUNT(*) AS count 
-    FROM comments 
-    WHERE 
-      user_id = ${id};
-  `
+	return {
+		sql: `SELECT COUNT(*) AS count 
+      FROM comments 
+      WHERE 
+        user_id = ?;`,
+		values: [id]
+	}
 }
 
 module.exports = {
