@@ -1,5 +1,3 @@
-const { getLocalDateTime } = require('../tools/dataUtils.cjs')
-
 const getUserQuery = id => {
 	return `SELECT * 
     FROM users 
@@ -25,8 +23,6 @@ const emailQuery = email => {
 }
 
 const addUserQuery = data => {
-	const date = getLocalDateTime()
-
 	return `INSERT INTO users (
       email,
       nickname,
@@ -38,7 +34,7 @@ const addUserQuery = data => {
       '${data.nickname}',
       '${data.password}',
       '${data.profile_image}',
-      '${date}'
+      NOW()
     );
   `
 }
@@ -56,7 +52,8 @@ const updateUserProfileQuery = data => {
 const updateUserPasswordQuery = data => {
 	return `UPDATE users
     SET 
-      password = '${data.password}'
+      password = '${data.password}',
+      updated_at = NOW()
     WHERE 
       user_id = ${data.userId};
   `

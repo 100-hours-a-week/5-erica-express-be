@@ -1,5 +1,3 @@
-const { getLocalDateTime } = require('../tools/dataUtils.cjs')
-
 const getCommentsQuery = id => {
 	return `SELECT 
       comments.*, 
@@ -31,8 +29,6 @@ const getCommentQuery = id => {
 }
 
 const addCommentQuery = data => {
-	const date = getLocalDateTime()
-
 	return `INSERT INTO comments (
       comment,
       post_id,
@@ -50,7 +46,8 @@ const addCommentQuery = data => {
 const updateCommentQuery = data => {
 	return `UPDATE comments 
     SET 
-      comment = '${data.commentContent}' 
+      comment = '${data.commentContent}',
+      updated_at= NOW() 
     WHERE 
       comment_id = ${data.commentId};   
   `

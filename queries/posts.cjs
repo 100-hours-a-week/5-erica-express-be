@@ -1,5 +1,3 @@
-const { getLocalDateTime } = require('../tools/dataUtils.cjs')
-
 // 전체 게시물 조회 쿼리
 const postsQuery = () => {
 	return `SELECT 
@@ -104,7 +102,6 @@ const codingPostsQuery = () => {
 
 // 게시물 작성 쿼리
 const addPostQuery = data => {
-	const date = getLocalDateTime()
 	return `INSERT INTO posts (
     user_id, 
       post_image, 
@@ -117,7 +114,7 @@ const addPostQuery = data => {
       '${data.postImage}', 
       '${data.title}', 
       '${data.content}', 
-      '${date}', 
+      NOW(),
       '${data.type}'
     );
   `
@@ -125,15 +122,13 @@ const addPostQuery = data => {
 
 // 게시물 수정 쿼리
 const updatePostQuery = data => {
-	const date = getLocalDateTime()
-
 	return `UPDATE posts 
     SET 
       title = "${data.title}", 
       content = "${data.content}", 
       post_image = "${data.postImage}", 
       type = "${data.type}",
-      updated_at = "${date}"
+      updated_at = NOW()
     WHERE 
       posts.post_id = ${data.id} 
   `
