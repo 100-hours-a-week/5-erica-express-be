@@ -1,6 +1,7 @@
-const mysql = require('mysql2')
-const { db_info } = require('../config/mysql.cjs')
+require('dotenv').config()
+const { db_info } = require('../config/config.cjs')
 
+const mysql = require('mysql2')
 const conn = mysql.createConnection(db_info)
 
 const queryPromise = (query, connection = conn) => {

@@ -11,7 +11,8 @@ const session = require('express-session')
 const app = express()
 const port = 8000
 
-const { db_info } = require('./config/mysql.cjs')
+require('dotenv').config()
+const { db_info } = require('./config/config.cjs')
 
 const MySQLStore = require('express-mysql-session')(session)
 const sessionStore = new MySQLStore(db_info)
@@ -30,7 +31,7 @@ app.use(express.json())
 app.use(cookieParser())
 app.use(
 	session({
-		secret: 'pizzamandu',
+		secret: process.env.SESSION_SECRET,
 		saveUninitialized: true,
 		resave: false,
 		cookie: {
@@ -42,7 +43,7 @@ app.use(
 )
 
 Sentry.init({
-	dsn: 'https://9fddd166b460c75bd5777c01ac66f668@o4507163352629248.ingest.us.sentry.io/4507163357020160',
+	dsn: process.env.SENTRY_DSN,
 	integrations: [
 		// enable HTTP calls tracing
 		new Sentry.Integrations.Http({ tracing: true }),
