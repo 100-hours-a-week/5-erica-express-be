@@ -6,8 +6,8 @@ const {
 	deleteCommentQuery
 } = require('../queries/comments.cjs')
 
+const { db_info } = require('../config/config.cjs')
 const mysql = require('mysql2')
-const { db_info } = require('../config/mysql.cjs')
 const { queryPromise } = require('../tools/queryUtils.cjs')
 
 const { upCommentCountQuery, downCommentCountQuery } = require('../queries/posts.cjs')
@@ -32,6 +32,8 @@ const addCommentModel = async data => {
 		await new Promise((resolve, reject) => {
 			connection.beginTransaction(async () => {
 				try {
+					//트랜잭션 격리 수준 설정
+					await queryPromise('SET TRANSACTION ISOLATION LEVEL REPEATABLE READ', connection)
 					// 댓글 추가
 					await queryPromise(addCommentQuery(data), connection)
 					// 게시물의 댓글 수 업데이트
@@ -63,6 +65,8 @@ const deleteCommentModel = async (postId, commentId) => {
 		await new Promise((resolve, reject) => {
 			connection.beginTransaction(async () => {
 				try {
+					//트랜잭션 격리 수준 설정
+					await queryPromise('SET TRANSACTION ISOLATION LEVEL REPEATABLE READ', connection)
 					// 댓글 삭제
 					await queryPromise(deleteCommentQuery(commentId), connection)
 					// 게시물의 댓글 수 업데이트

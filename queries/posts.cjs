@@ -152,13 +152,15 @@ const getTopPostQuery = () => {
 const upCommentCountQuery = postId => {
 	return `UPDATE posts
 	SET comment_count = comment_count + 1
-	WHERE post_id = ${postId};`
+	WHERE post_id = ${postId}
+  FOR UPDATE;`
 }
 
 const downCommentCountQuery = postId => {
 	return `UPDATE posts
 	SET comment_count = comment_count - 1
-	WHERE post_id = ${postId};`
+	WHERE post_id = ${postId}
+  FOR UPDATE;`
 }
 
 module.exports = {
