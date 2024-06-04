@@ -19,7 +19,7 @@ const { db_info } = require('./config/config.cjs')
 const limiter = rateLimit({
 	windowMs: 15 * 60 * 1000,
 	max: 100,
-	message: 'too many requesst'
+	message: 'too many request'
 })
 
 const MySQLStore = require('express-mysql-session')(session)
