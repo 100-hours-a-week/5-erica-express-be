@@ -18,7 +18,8 @@ const { getAuthUser, getPostUser } = require('../middleware/authUser.cjs')
 const router = express.Router()
 
 //게시물 목록 불러오기 --OK
-router.get('/', getAuthUser, getPosts)
+// router.get('/', getAuthUser, getPosts)
+router.get('/', getPosts)
 
 //내 게시물
 router.get('/myPosts', getAuthUser, getMyPosts)

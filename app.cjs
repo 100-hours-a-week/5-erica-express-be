@@ -10,9 +10,17 @@ const cookieParser = require('cookie-parser')
 const session = require('express-session')
 const app = express()
 const port = 8000
+const timeout = require('connect-timeout')
+const rateLimit = require('express-rate-limit')
 
 require('dotenv').config()
 const { db_info } = require('./config/config.cjs')
+
+const limiter = rateLimit({
+	windowMs: 15 * 60 * 1000,
+	max: 100,
+	message: 'too many requesst'
+})
 
 const MySQLStore = require('express-mysql-session')(session)
 const sessionStore = new MySQLStore(db_info)
@@ -66,6 +74,21 @@ app.use(Sentry.Handlers.tracingHandler())
 app.use(express.urlencoded({ extended: true }))
 app.use(express.json({ limit: '50mb' }))
 app.use(express.text())
+
+app.use(timeout('3s'))
+app.use((req, res, next) => {
+	if (!req.timedout) next()
+})
+
+app.use((err, req, res, next) => {
+	if (req.timedout) {
+		res.status(503).send({ status: 503, message: 'request_time_out', data: null })
+	} else {
+		next(err)
+	}
+})
+
+app.use(limiter)
 
 // 정적 파일 제공 설정
 app.use('/images', express.static(path.join(__dirname, 'images')))
