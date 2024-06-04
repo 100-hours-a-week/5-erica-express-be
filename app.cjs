@@ -12,6 +12,7 @@ const app = express()
 const port = 8000
 const timeout = require('connect-timeout')
 const rateLimit = require('express-rate-limit')
+const helmet = require('helmet')
 
 require('dotenv').config()
 const { db_info } = require('./config/config.cjs')
@@ -89,6 +90,7 @@ app.use((err, req, res, next) => {
 })
 
 app.use(limiter)
+app.use(helmet())
 
 // 정적 파일 제공 설정
 app.use('/images', express.static(path.join(__dirname, 'images')))
